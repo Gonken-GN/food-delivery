@@ -5,7 +5,8 @@
   "compilerOptions": {
     "deleteOutDir": true,
     "webpack": true,
-    "tsConfigPath": "apps/backend/tsconfig.app.json"
+    "tsConfigPath": "apps/backend/tsconfig.app.json",
+    "watchAssets": true
   },
   "monorepo": true,
   "root": "apps/backend",

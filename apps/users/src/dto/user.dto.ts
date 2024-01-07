@@ -1,40 +1,47 @@
 import { InputType, Field } from '@nestjs/graphql';
-import {
-  IsEmail,
-  IsNotEmpty,
-  IsString,
-  isEmail,
-  isNotEmpty,
-  isString,
-  minLength,
-} from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
 
 @InputType()
 export class RegisterDTO {
   @Field()
-  @isNotEmpty({ message: 'Name is required' })
-  @isString({ message: 'Name must be a string' })
+  @IsNotEmpty({ message: 'Name is required' })
+  @IsString({ message: 'Name must be a string' })
   name: string;
 
   @Field()
-  @isNotEmpty({ message: 'Password is required' })
-  @minLength(8, { message: 'Password must be at least 8 characters' })
+  @IsNotEmpty({ message: 'Password is required' })
+  @MinLength(8, { message: 'Password must be at least 8 characters' })
   password: string;
 
   @Field()
-  @isNotEmpty({ message: 'Email is required' })
-  @isEmail({}, { message: 'Invalid email' })
+  @IsNotEmpty({ message: 'Email is required' })
+  @IsEmail({}, { message: 'Invalid email' })
   email: string;
+
+  @Field()
+  @IsNotEmpty({ message: 'Phone number is required' })
+  phone_number: number;
+}
+
+@InputType()
+export class ActivationDTO {
+  @Field()
+  @IsNotEmpty({ message: 'Activation Token is required.' })
+  activationToken: string;
+
+  @Field()
+  @IsNotEmpty({ message: 'Activation Code is required.' })
+  activationCode: string;
 }
 
 @InputType()
 export class LoginDTO {
   @Field()
-  @isNotEmpty({ message: 'Email is required' })
-  @isEmail({}, { message: 'Email must be valid' })
+  @IsNotEmpty({ message: 'Email is required' })
+  @IsEmail({}, { message: 'Email must be valid' })
   email: string;
 
   @Field()
-  @isNotEmpty({ message: 'Password is required' })
+  @IsNotEmpty({ message: 'Password is required' })
   password: string;
 }
