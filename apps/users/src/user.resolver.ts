@@ -34,6 +34,13 @@ export class UsersResolver {
     return await this.userService.activateUser(activationDTO, context.res);
   }
 
+  @Mutation(() => User)
+  async login(
+    @Args('email') email: string,
+    @Args('password') password: string,
+  ) {
+    return this.userService.login({ email, password });
+  }
   @Query(() => [User])
   async getAllUsers() {
     return this.userService.getAllUsers();

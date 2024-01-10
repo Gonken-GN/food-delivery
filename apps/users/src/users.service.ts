@@ -7,6 +7,7 @@ import { JwtService, JwtVerifyOptions } from '@nestjs/jwt';
 import { Response } from 'express';
 import * as bcrypt from 'bcrypt';
 import { EmailService } from './email/email.service';
+import { TokenSender } from './utils/sendToken';
 
 interface UserData {
   name: string;
@@ -117,13 +118,24 @@ export class UsersService {
   // Login user
   async login(loginDTO: LoginDTO) {
     const { email, password } = loginDTO;
-    const user = {
-      email,
-      password,
-    };
-    return user;
+    const user = await this.prismaService.user.findUnique({
+      where: {
+        email,
+      },
+    });
+    if (user && (await this.comparePassword(password, user.password))) {
+      const tokenSender = new TokenSender(this.configService, this.jwtService);
+      tokenSender.sendToken(user);
+    } else throw new BadRequestException('Invalid credentials');
   }
 
+  // Compare password with hashed password
+  async comparePassword(
+    password: string,
+    hashedPassword: string,
+  ): Promise<boolean> {
+    return await bcrypt.compare(password, hashedPassword);
+  }
   // Get All users
   async getAllUsers() {
     return this.prismaService.user.findMany({});
