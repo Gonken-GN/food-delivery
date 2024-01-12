@@ -125,8 +125,17 @@ export class UsersService {
     });
     if (user && (await this.comparePassword(password, user.password))) {
       const tokenSender = new TokenSender(this.configService, this.jwtService);
-      tokenSender.sendToken(user);
-    } else throw new BadRequestException('Invalid credentials');
+      return tokenSender.sendToken(user);
+    } else {
+      return {
+        user: null,
+        accessToken: null,
+        refreshToken: null,
+        error: {
+          message: 'Invalid credentials',
+        },
+      };
+    }
   }
 
   // Compare password with hashed password
