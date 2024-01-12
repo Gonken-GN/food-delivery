@@ -138,6 +138,21 @@ export class UsersService {
     }
   }
 
+  // Get Logged in user
+  async getLoggedInUser(req: any) {
+    const user = req.user;
+    const accessToken = req.accesstoken;
+    const refreshToken = req.refreshtoken;
+    return { user, accessToken, refreshToken };
+  }
+
+  // Get Logged out user
+  async logOut(req: any) {
+    req.user = null;
+    req.refreshtoken = null;
+    req.accesstoken = null;
+    return { message: 'Logged out successfully' };
+  }
   // Compare password with hashed password
   async comparePassword(
     password: string,

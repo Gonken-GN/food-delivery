@@ -1,14 +1,16 @@
-import { BadRequestException } from '@nestjs/common';
+import { BadRequestException, UseGuards } from '@nestjs/common';
 import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { UsersService } from './users.service';
 import {
   ActivationResponse,
+  LogOutResponse,
   LoginResponse,
   RegisterResponse,
 } from './types/user.types';
 import { ActivationDTO, RegisterDTO } from './dto/user.dto';
 import { User } from './entities/user.entity';
 import { Response } from 'express';
+import { AuthGuard } from './guards/auth.guard';
 
 @Resolver('User')
 export class UsersResolver {
@@ -46,6 +48,17 @@ export class UsersResolver {
     return this.userService.login({ email, password });
   }
 
+  @Query(() => LoginResponse)
+  @UseGuards(AuthGuard)
+  async getLoggedInUser(@Context() context: { req: Request }) {
+    return await this.userService.getLoggedInUser(context.req);
+  }
+
+  @Query(() => LogOutResponse)
+  @UseGuards(AuthGuard)
+  async logOutUser(@Context() context: { req: Request }) {
+    return await this.userService.logOut(context.req);
+  }
   @Query(() => [User])
   async getAllUsers() {
     return this.userService.getAllUsers();
